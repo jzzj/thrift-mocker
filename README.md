@@ -7,6 +7,8 @@ You will not need to wirte mock-data any more, All data generate automatically b
 
 ## Usage
 ```js
+import ThriftMocker from 'thrift-mocker';
+
 const thriftMocker = new ThriftMocker({
   service: "@path/to/your/file.thrift",
   models: [require("@path/to/your/model.thrift"), require("@path/to/your/another-model.thrift")],   // more than one model thrift file.
