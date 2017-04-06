@@ -1,0 +1,24 @@
+{
+  "name": "thrift-mocker",
+  "version": "1.0.1",
+  "description": "Easy to mock data based on thrift, no hard code data anymore!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jzzj/thrift-parser.git"
+  },
+  "keywords": [
+    "thrift",
+    "mocker",
+    "thrift-mocker"
+  ],
+  "author": "zangzhan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jzzj/thrift-parser/issues"
+  },
+  "homepage": "https://github.com/jzzj/thrift-parser#readme"
+}
