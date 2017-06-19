@@ -1,6 +1,6 @@
 {
   "name": "thrift-mocker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Easy to mock data based on thrift, no hard code data anymore!",
   "main": "index.js",
   "scripts": {
