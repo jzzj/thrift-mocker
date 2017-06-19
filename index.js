@@ -38,7 +38,8 @@ export default function(options){
         try{
           const data = generate(method.type, ast, {
             mockData: options.mockData && options.mockData[methodName] || {},
-            commonData: options.commonData
+            commonData: options.commonData,
+            boundary: options.boundary
           });
           if(options.cache){
             const cacheKey = methodName+JSON.stringify(args);

@@ -23,6 +23,7 @@ const thriftMocker = new ThriftMocker({
     code: 200,
     message: "success"
   },
+  boundary: false, // generate data maybe really long, null, empty string, etc.
   cache: true,  // if not cache, will generate different data at each time. Your choice.
   serviceName: "YourSeviceName" // If your thrift service has more than one service, you have to indicate the service you need!
 });
@@ -31,4 +32,4 @@ const thriftMocker = new ThriftMocker({
 ## Generator
 In most application, your data have vast type of data, such as: img, url, text, number, price, percent, person name, goods name, etc.
 In such cases, you may want to make your data more reality ( even I don't think it's necessary ), you could change the generator by youself.    
-I promise I will provide a better way, maybe like a AI, to generate more reality data. Of course, in the future!
+I promise I will provide a better way, maybe like an AI, to generate more reality data. Of course, in the future!

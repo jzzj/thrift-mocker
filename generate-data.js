@@ -2,6 +2,7 @@ import { extend } from "@utils/helper";
 import * as generator from './generator';
 
 var mockData = {};
+var generateBoundary = false;
 export default function generate(type, ast, opts){
   //console.log(type, JSON.stringify(ast, void 0 ,4), 'original-ast');
   var ret = type.split(".");
@@ -12,44 +13,33 @@ export default function generate(type, ast, opts){
   let structItems = getStruct(ret.slice(1).join("."), ast).struct;
 
   mockData = opts.mockData;
+  generateBoundary = !!opts.boundary;
   return extend(constructorData(structItems, ast), opts.commonData || {});
 }
 
 function constructorData(structItems, ast){
   return structItems.reduce((ret, item, idx)=>{
     if(typeof item.type === 'string'){
-      switch(item.type){
-        case "i32":
-        case "i64":
-          ret[item.name] = Math.round(Math.random()*99999);
-          break;
-        case "string":
-          ret[item.name] = generator.lettersGenerator();
-          break;
-        case "double":
-          ret[item.name] = generator.doubleGenerator();
-          break;
-        case "bool":
-          ret[item.name] = Math.random() > 0.5;
-          break;
-        default:
-          let items;
-          let result = item.type.split(".");
-          let innerAst = ast;
-          //console.log("------", item.type,"||" , ast, 123123, "----");
-          if(result.length > 1){
-            let ret = findModel(result[0], ast);
-            let model = ret.model;
-            if(model && model.struct){
-              items = model.struct[result[1]];
-            }
-            //console.log("---ret---", ret, "||", items, "---ret---")
-            innerAst = ret.model;
-          }else{
-            items = innerAst.struct[item.type];
+      const result = doGenerate(item.name, item.type);
+      if(result === -1){
+        let items;
+        let result = item.type.split(".");
+        let innerAst = ast;
+        //console.log("------", item.type,"||" , ast, 123123, "----");
+        if(result.length > 1){
+          let ret = findModel(result[0], ast);
+          let model = ret.model;
+          if(model && model.struct){
+            items = model.struct[result[1]];
           }
-          ret[item.name] = constructorData(items, innerAst);
-          break;
+          //console.log("---ret---", ret, "||", items, "---ret---")
+          innerAst = ret.model;
+        }else{
+          items = innerAst.struct[item.type];
+        }
+        ret[item.name] = constructorData(items, innerAst);
+      }else{
+        ret[item.name] = result;
       }
     }else{
       const valueType = item.type.valueType;
@@ -57,30 +47,18 @@ function constructorData(structItems, ast){
       switch(item.type.name){
         case "set":
         case "list":
-          switch(valueType){
-            case "i32":
-            case "i64":
-              ret[item.name] = [Math.round(Math.random()*99999)];
-              break;
-            case "double":
-              ret[item.name] = [generator.doubleGenerator()];
-              break;
-            case "string":
-              ret[item.name] = [generator.lettersGenerator()];
-              break;
-            case "bool":
-              ret[item.name] = [Math.random() > 0.5];
-              break;
-            default:
-              const data = getStruct(valueType, ast);
-              const items = data.struct;
-              //console.log("---list", valueType, "||", ast, "list---");
-              ast = data.ast;
-              for(let i=0, len=Math.round(Math.random()*20); i<len; i++){
-                result.push(constructorData(items, ast));
-              }
-              ret[item.name] = result;
-              break;
+          const generateResult = doGenerate(item.name, valueType);
+          if(generateResult === -1){
+            const data = getStruct(valueType, ast);
+            const items = data.struct;
+            //console.log("---list", valueType, "||", ast, "list---");
+            ast = data.ast;
+            for(let i=0, len=Math.round(Math.random()*20); i<len; i++){
+              result.push(constructorData(items, ast));
+            }
+            ret[item.name] = result;
+          }else{
+            ret[item.name] = [generateResult];
           }
           break;
         case "map":
@@ -125,4 +103,29 @@ function findModel(model, ast){
     }
   }
   return null;
+}
+
+function doGenerate(name, type){
+  switch(type){
+    case "i32":
+      return generator.numberGenerator(generateBoundary);
+    case "i64":
+      if(/date/i.test(name) || /time/i.test(name)){
+        return generator.timeGenerator(generateBoundary);
+      }else{
+        return generator.i64Generator(generateBoundary);
+      }
+    case "string":
+      if(/name/i.test(name)){
+        return generator.chineseGenerator(generateBoundary);
+      }else{
+        return generator.lettersGenerator(generateBoundary);
+      }
+    case "double":
+      return generator.doubleGenerator(generateBoundary);
+    case "bool":
+      return generator.boolGenerator(generateBoundary);
+    default:
+      return -1;
+  }
 }
