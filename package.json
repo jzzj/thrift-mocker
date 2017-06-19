@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jzzj/thrift-parser.git"
+    "url": "git+https://github.com/jzzj/thrift-mocker.git"
   },
   "keywords": [
     "thrift",
@@ -18,7 +18,7 @@
   "author": "zangzhan",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jzzj/thrift-parser/issues"
+    "url": "https://github.com/jzzj/thrift-mocker/issues"
   },
-  "homepage": "https://github.com/jzzj/thrift-parser#readme"
+  "homepage": "https://github.com/jzzj/thrift-mocker#readme"
 }
