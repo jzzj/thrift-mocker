@@ -27,6 +27,8 @@ const thriftMocker = new ThriftMocker({
   cache: true,  // if not cache, will generate different data at each time. Your choice.
   serviceName: "YourSeviceName" // If your thrift service has more than one service, you have to indicate the service you need!
 });
+
+const result = await thriftMocker.exec('Reserved argument!', methodName, ...args);
 ```
 
 ## Generator
