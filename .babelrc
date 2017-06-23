@@ -2,6 +2,7 @@
 	"presets": [ "es2015" , "react" ],
 	"plugins": [
 		"babel-plugin-transform-class-properties",
+		"babel-plugin-add-module-exports",
 	    "babel-plugin-syntax-trailing-function-commas",
 	    "babel-plugin-transform-async-to-generator-2",
 	    "babel-plugin-transform-exponentiation-operator",

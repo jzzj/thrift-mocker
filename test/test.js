@@ -2,6 +2,7 @@ import assert from 'assert';
 import should from 'should';
 import ThriftMocker from '../lib/';
 import path from 'path';
+import { extend } from '../lib/utils/helper';
 
 let thriftMocker;
 
@@ -26,6 +27,6 @@ describe('Your tests go here!', function() {
     });
 
     it('test case 2', function() {
-        
+      assert(extend({}, {a:1}).a === 1);
     });
 });
