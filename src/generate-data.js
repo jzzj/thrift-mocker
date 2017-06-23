@@ -35,14 +35,12 @@ function constructorData(structItems, ast){
         let items;
         let result = item.type.split(".");
         let innerAst = ast;
-        //console.log("------", item.type,"||" , ast, 123123, "----");
         if(result.length > 1){
           let ret = findModel(result[0], ast);
           let model = ret.model;
           if(model && model.struct){
             items = model.struct[result[1]];
           }
-          //console.log("---ret---", ret, "||", items, "---ret---")
           innerAst = ret.model;
         }else{
           items = innerAst.struct[item.type];
@@ -117,6 +115,7 @@ function findModel(model, ast){
 
 function doGenerate(name, type){
   switch(type){
+    case "i16":
     case "i32":
       return generator.numberGenerator(generateBoundary);
     case "i64":

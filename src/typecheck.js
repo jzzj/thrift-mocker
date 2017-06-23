@@ -1,6 +1,7 @@
 function check(type, value, model){
   if(typeof type === 'string'){
     switch(type){
+      case "i16":
       case "i32":
       case "i64":
       case "double":
