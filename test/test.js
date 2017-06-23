@@ -1,4 +1,5 @@
 import assert from 'assert';
+import thriftMocker from '../lib/'
 
 describe('Your tests go here!', function() {
     

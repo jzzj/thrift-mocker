@@ -1,4 +1,4 @@
-import { extend } from "@utils/helper";
+import { extend } from "./utils/helper";
 import * as generator from './generator';
 
 var mockData = {};
