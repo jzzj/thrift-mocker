@@ -1,6 +1,7 @@
-const parser = require("./parser");
-const typecheck = require("./typecheck");
-const generate = require("./generate-data");
+import parser from "./parser";
+import typecheck from "./typecheck";
+import generate from "./generate-data";
+
 const fs = require('fs');
 
 let cache = {};

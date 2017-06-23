@@ -1,6 +1,7 @@
 import { extend } from "./utils/helper";
-import * as generator from './generator';
+import generator from './generator';
 
+const UNMATCHED = {};
 var mockData = {};
 var generateBoundary = false;
 export default function generate(type, ast, opts){
@@ -10,6 +11,11 @@ export default function generate(type, ast, opts){
     ast = ast.include[ret[0]];
   }
 
+  const result = constructorPrimitive(type);
+  if(result !== UNMATCHED) {
+    return result;
+  }
+
   let structItems = getStruct(ret.slice(1).join("."), ast).struct;
 
   mockData = opts.mockData;
@@ -17,11 +23,15 @@ export default function generate(type, ast, opts){
   return extend(constructorData(structItems, ast), opts.commonData || {});
 }
 
+function constructorPrimitive(type) {
+  return doGenerate('', type);
+}
+
 function constructorData(structItems, ast){
   return structItems.reduce((ret, item, idx)=>{
     if(typeof item.type === 'string'){
       const result = doGenerate(item.name, item.type);
-      if(result === -1){
+      if(result === UNMATCHED){
         let items;
         let result = item.type.split(".");
         let innerAst = ast;
@@ -48,7 +58,7 @@ function constructorData(structItems, ast){
         case "set":
         case "list":
           const generateResult = doGenerate(item.name, valueType);
-          if(generateResult === -1){
+          if(generateResult === UNMATCHED){
             const data = getStruct(valueType, ast);
             const items = data.struct;
             //console.log("---list", valueType, "||", ast, "list---");
@@ -126,6 +136,6 @@ function doGenerate(name, type){
     case "bool":
       return generator.boolGenerator(generateBoundary);
     default:
-      return -1;
+      return UNMATCHED;
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "thrift-mocker",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Easy to mock data based on thrift, no hard code data anymore!",
   "author": {
     "name": "zangzhan"
@@ -39,7 +39,9 @@
     "babel-preset-react": "^6.16.0",
     "mocha": "^3.2.0",
     "react": "^15.4.1",
-    "react-dom": "^15.4.1"
+    "react-dom": "^15.4.1",
+    "should": "^11.2.1",
+    "thrift": "^0.10.0"
   },
   "keywords": [
     "thrift",
