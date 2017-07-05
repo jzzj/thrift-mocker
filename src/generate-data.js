@@ -5,7 +5,6 @@ const UNMATCHED = {};
 var mockData = {};
 var generateBoundary = false;
 export default function generate(type, ast, opts){
-  //console.log(type, JSON.stringify(ast, void 0 ,4), 'original-ast');
   var ret = type.split(".");
   if(ret.length > 1){
     ast = ast.include[ret[0]];
@@ -45,6 +44,7 @@ function constructorData(structItems, ast){
         }else{
           items = innerAst.struct[item.type];
         }
+        extendModels(innerAst, ast);
         ret[item.name] = constructorData(items, innerAst);
       }else{
         ret[item.name] = result;
@@ -59,10 +59,10 @@ function constructorData(structItems, ast){
           if(generateResult === UNMATCHED){
             const data = getStruct(valueType, ast);
             const items = data.struct;
-            //console.log("---list", valueType, "||", ast, "list---");
-            ast = data.ast;
+            let innerAst = data.ast;
+            extendModels(innerAst, ast);
             for(let i=0, len=Math.round(Math.random()*20); i<len; i++){
-              result.push(constructorData(items, ast));
+              result.push(constructorData(items, innerAst));
             }
             ret[item.name] = result;
           }else{
@@ -92,6 +92,17 @@ function getStruct(type, ast){
       struct: ast.struct[type],
       ast
     };
+  }
+}
+
+function extendModels(innerAst, outerAst){
+  if(innerAst && outerAst && outerAst.include) {
+    innerAst.include = innerAst.include || {};
+    for(var model in outerAst.include) {
+      if(!innerAst.include[model]){
+        innerAst.include[model] = outerAst.include[model];
+      }
+    }
   }
 }
 
