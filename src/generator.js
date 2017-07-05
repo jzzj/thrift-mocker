@@ -1,20 +1,20 @@
 export default {
   chineseGenerator(){
     return wrapper(function(){
-      return Array.from(Array(randomRange(2, 8+ Math.pow(100, Number(this))))).map(i=>String.fromCharCode(randomRange(19968, 21869))).join(""); //40869
+      return Array.apply(null, Array(randomRange(2, 8+ Math.pow(100, Number(this))))).map(i=>String.fromCharCode(randomRange(19968, 21869))).join(""); //40869
     }, ...arguments);
   },
 
   phoneGenerator(){
     return wrapper(function(){
-      return "1" + Array.from(Array(randomRange(10, 10))).map(i=>randomRange(0,9)).join("");
+      return "1" + Array.apply(null, Array(randomRange(10, 10))).map(i=>randomRange(0,9)).join("");
     }, ...arguments);
   },
 
   lettersGenerator(){
     return wrapper(function(){
-      return Array.from(Array(randomRange(10, 20 + Math.pow(100, Number(this))))).map(i=>String.fromCharCode(randomRange(65, 122))).join("") + 
-           Array.from(Array(randomRange(0, 3))).map(i=>String.fromCharCode(randomRange(48, 58))).join("");
+      return Array.apply(null, Array(randomRange(10, 20 + Math.pow(100, Number(this))))).map(i=>String.fromCharCode(randomRange(65, 122))).join("") + 
+           Array.apply(null, Array(randomRange(0, 3))).map(i=>String.fromCharCode(randomRange(48, 58))).join("");
     }, ...arguments);
   },
 
