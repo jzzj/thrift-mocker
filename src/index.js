@@ -34,7 +34,7 @@ export default function(options){
       if(args.length !== method.args.length){
         throw new Error("Arguments length not match! expect "+method.args.length+" and received "+args.length+"!");
       }
-      typecheck(args, method.args, options.models);
+      typecheck(args, method.args, options.models, !!options.strictMode);
       return new Promise((resolve, reject)=>{
         try{
           const data = generate(method.type, ast, {

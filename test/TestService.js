@@ -38,8 +38,8 @@ TestService_doTest_args.prototype.read = function(input) {
     switch (fid)
     {
       case 1:
-      if (ftype == Thrift.Type.I32) {
-        this.id = input.readI32();
+      if (ftype == Thrift.Type.I16) {
+        this.id = input.readI16();
       } else {
         input.skip(ftype);
       }
@@ -63,8 +63,8 @@ TestService_doTest_args.prototype.read = function(input) {
 TestService_doTest_args.prototype.write = function(output) {
   output.writeStructBegin('TestService_doTest_args');
   if (this.id !== null && this.id !== undefined) {
-    output.writeFieldBegin('id', Thrift.Type.I32, 1);
-    output.writeI32(this.id);
+    output.writeFieldBegin('id', Thrift.Type.I16, 1);
+    output.writeI16(this.id);
     output.writeFieldEnd();
   }
   if (this.str !== null && this.str !== undefined) {
@@ -120,6 +120,125 @@ TestService_doTest_result.prototype.read = function(input) {
 
 TestService_doTest_result.prototype.write = function(output) {
   output.writeStructBegin('TestService_doTest_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.I32, 0);
+    output.writeI32(this.success);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var TestService_doTest1_args = function(args) {
+  this.id = null;
+  this.str = null;
+  if (args) {
+    if (args.id !== undefined) {
+      this.id = args.id;
+    }
+    if (args.str !== undefined) {
+      this.str = args.str;
+    }
+  }
+};
+TestService_doTest1_args.prototype = {};
+TestService_doTest1_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.I64) {
+        this.id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.str = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+TestService_doTest1_args.prototype.write = function(output) {
+  output.writeStructBegin('TestService_doTest1_args');
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.I64, 1);
+    output.writeI64(this.id);
+    output.writeFieldEnd();
+  }
+  if (this.str !== null && this.str !== undefined) {
+    output.writeFieldBegin('str', Thrift.Type.STRING, 2);
+    output.writeString(this.str);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var TestService_doTest1_result = function(args) {
+  this.success = null;
+  if (args) {
+    if (args.success !== undefined) {
+      this.success = args.success;
+    }
+  }
+};
+TestService_doTest1_result.prototype = {};
+TestService_doTest1_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.I32) {
+        this.success = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+TestService_doTest1_result.prototype.write = function(output) {
+  output.writeStructBegin('TestService_doTest1_result');
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.I32, 0);
     output.writeI32(this.success);
@@ -187,6 +306,54 @@ TestServiceClient.prototype.recv_doTest = function(input,mtype,rseqid) {
   }
   return callback('doTest failed: unknown result');
 };
+TestServiceClient.prototype.doTest1 = function(id, str, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_doTest1(id, str);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_doTest1(id, str);
+  }
+};
+
+TestServiceClient.prototype.send_doTest1 = function(id, str) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('doTest1', Thrift.MessageType.CALL, this.seqid());
+  var args = new TestService_doTest1_args();
+  args.id = id;
+  args.str = str;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+TestServiceClient.prototype.recv_doTest1 = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new TestService_doTest1_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('doTest1 failed: unknown result');
+};
 var TestServiceProcessor = exports.Processor = function(handler) {
   this._handler = handler
 }
@@ -228,6 +395,36 @@ TestServiceProcessor.prototype.process_doTest = function(seqid, input, output) {
     this._handler.doTest(args.id, args.str,  function (err, result) {
       var result = new TestService_doTest_result((err != null ? err : {success: result}));
       output.writeMessageBegin("doTest", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+TestServiceProcessor.prototype.process_doTest1 = function(seqid, input, output) {
+  var args = new TestService_doTest1_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.doTest1.length === 2) {
+    Q.fcall(this._handler.doTest1, args.id, args.str)
+      .then(function(result) {
+        var result = new TestService_doTest1_result({success: result});
+        output.writeMessageBegin("doTest1", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new TestService_doTest1_result(err);
+        output.writeMessageBegin("doTest1", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.doTest1(args.id, args.str,  function (err, result) {
+      var result = new TestService_doTest1_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("doTest1", Thrift.MessageType.REPLY, seqid);
       result.write(output);
       output.writeMessageEnd();
       output.flush();

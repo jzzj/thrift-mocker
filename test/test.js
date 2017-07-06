@@ -12,6 +12,7 @@ describe('Your tests go here!', function() {
       thriftMocker = new ThriftMocker({
         service: path.resolve(__dirname, './service.thrift'),
         models: [require('./service_types')],
+        strictMode: true
       });
     });
 
@@ -24,6 +25,15 @@ describe('Your tests go here!', function() {
           assert(false, 'type is not ok!');
           done();
         });
+    });
+
+    it('check i64 is ok', function(done) {
+      try {
+        thriftMocker.exec('Reserved argument', 'doTest1', '43', '12');
+      }catch(e){
+        assert(e instanceof TypeError, 'not TypeError, error happened');
+        done();
+      }
     });
 
     it('test case 2', function() {

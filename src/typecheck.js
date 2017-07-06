@@ -1,11 +1,13 @@
-function check(type, value, model){
+function check(type, value, model, strictMode){
   if(typeof type === 'string'){
     switch(type){
+      case "byte":
       case "i16":
       case "i32":
-      case "i64":
       case "double":
         return typeof value === 'number' && Number.isFinite(value) && !isNaN(value);
+      case "i64":
+        return !isNaN(parseFloat(value)) && isFinite(value) && (strictMode ? typeof value === 'number' : true);
       case "string":
         return typeof value === 'string';
       case "bool":
@@ -42,11 +44,11 @@ function getStruct(type, models){
   throw new Error(type + ' struct not found in Model! please check!');
 }
 
-export default function typecheck(args, api, model){
+export default function typecheck(args, api, model, strictMode){
   for(let i=0, len=args.length; i<len; i++){
     let type = api[i].type;
-    if(!check(type, args[i], model)){
-      throw new Error("Argument type not match! expect "+(type && type.name || type)+" and received "+ args[i] + "["+typeof(args[i])+"]");
+    if(!check(type, args[i], model, strictMode)){
+      throw new TypeError("Argument type not match! expect "+(type && type.name || type)+" and received "+ args[i] + "["+typeof(args[i])+"]");
     }
   }
 }
