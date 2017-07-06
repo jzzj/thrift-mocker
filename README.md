@@ -23,6 +23,7 @@ const thriftMocker = new ThriftMocker({
     code: 200,
     message: "success"
   },
+  strictMode: true, // default false, will not check i64 for a number if strictMode is not true
   boundary: false, // generate data maybe really long, null, empty string, etc.
   cache: true,  // if not cache, will generate different data at each time. Your choice.
   serviceName: "YourSeviceName" // If your thrift service has more than one service, you have to indicate the service you need!
