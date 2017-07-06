@@ -1,6 +1,6 @@
 {
   "name": "thrift-mocker",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Easy to mock data based on thrift, no hard code data anymore!",
   "author": {
     "name": "zangzhan"
