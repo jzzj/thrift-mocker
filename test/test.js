@@ -63,7 +63,7 @@ describe('Your tests go here!', function() {
       });
     });
 
-    it.only('thriftTestService test', function(done) {
+    it('thriftTestService test', function(done) {
       done();
     })
 
