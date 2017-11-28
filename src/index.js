@@ -70,7 +70,6 @@ export default function(options){
           }
           args = finalArgs;
         }
-        console.log([null, key].concat(args));
         return mocker.exec.apply(mocker, [null, key].concat(args));
       }
     }

@@ -181,6 +181,23 @@ module.exports = function parser(file) {
     return value;
   };
 
+  var readMultipartName = function readMultipartName() {
+    var i = 0;
+    var result = [];
+    var byte = buffer[offset];
+    while (byte >= 97 && byte <= 122 || // a-z
+    byte === 95 || // _
+    byte === 46 || // .
+    byte >= 65 && byte <= 90 || // A-Z
+    byte >= 48 && byte <= 57 // 0-9
+    ) {
+      byte = buffer[offset + ++i];
+    }if (i === 0) throw 'Unexpected token';
+    var value = buffer.toString('utf8', offset, offset += i);
+    readSpace();
+    return value;
+  }
+
   var readNumberValue = function readNumberValue() {
     var result = [];
     for (;;) {
@@ -392,7 +409,8 @@ module.exports = function parser(file) {
 
   var readNamespace = function readNamespace() {
     var subject = readKeyword('namespace');
-    var name = readName();
+    var name = readMultipartName();
+
     var serviceName = readRefValue()['='].join('.');
     return { subject: subject, name: name, serviceName: serviceName };
   };

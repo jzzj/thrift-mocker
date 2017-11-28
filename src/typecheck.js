@@ -47,7 +47,6 @@ function getStruct(type, models){
 export default function typecheck(args, api, model, strictMode, typeLoose){
   for(let i=0, len=args.length; i<len; i++){
     let type = api[i].type;
-    console.log(api[i], 1231);
     if(!check(type, args[i], model, strictMode, typeLoose)){
       throw new TypeError("Argument type not match! expect "+(type && type.name || type)+" and received "+ args[i] + "["+typeof(args[i])+"]");
     }

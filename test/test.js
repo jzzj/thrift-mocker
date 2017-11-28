@@ -5,6 +5,7 @@ import path from 'path';
 import { extend } from '../lib/utils/helper';
 
 let thriftMocker;
+let thriftTestService;
 
 describe('Your tests go here!', function() {
     
@@ -12,6 +13,13 @@ describe('Your tests go here!', function() {
       thriftMocker = new ThriftMocker({
         service: path.resolve(__dirname, './service.thrift'),
         models: [require('./service_types')],
+        strictMode: true,
+        treatArgumentsAsObject: true,
+        typeLoose: true
+      });
+      thriftTestService = new ThriftMocker({
+        service: path.resolve(__dirname, './thrift/test1.thrift'),
+        models: [require('./thrift/test1_types')],
         strictMode: true,
         treatArgumentsAsObject: true,
         typeLoose: true
@@ -54,6 +62,10 @@ describe('Your tests go here!', function() {
         done();
       });
     });
+
+    it.only('thriftTestService test', function(done) {
+      done();
+    })
 
     it('test case 2', function() {
       assert(extend({}, {a:1}).a === 1);

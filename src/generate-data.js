@@ -15,7 +15,7 @@ export default function generate(type, ast, opts){
     return result;
   }
 
-  let structItems = getStruct(ret.slice(1).join("."), ast).struct;
+  let structItems = getStruct(ret.slice(1).join(".") || (ret.length === 1 ? ret[0] : type), ast).struct;
 
   mockData = opts.mockData;
   generateBoundary = !!opts.boundary;
