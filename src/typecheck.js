@@ -1,4 +1,4 @@
-function check(type, value, model, strictMode){
+function check(type, value, model, strictMode, typeLoose){
   if(typeof type === 'string'){
     switch(type){
       case "byte":
@@ -17,8 +17,8 @@ function check(type, value, model, strictMode){
         if(!struct){
           throw new Error(type + ' struct not found in Model! please check!');
         }
-        // did not check the inner struct!
-        return value instanceof struct;
+        // did not check the inside of struct!
+        return typeLoose ? value instanceof Object : value instanceof (struct instanceof Function ? struct : struct[type]);
     }
   }else{
     if(typeof value !== 'object'){
@@ -26,7 +26,7 @@ function check(type, value, model, strictMode){
     }
     const valueType = type.valueType;
     for(let i in value){
-      if(check(valueType, value[i], model) === false){
+      if(check(valueType, value[i], model, strictMode, typeLoose) === false){
         return false;
       }
     }
@@ -44,10 +44,11 @@ function getStruct(type, models){
   throw new Error(type + ' struct not found in Model! please check!');
 }
 
-export default function typecheck(args, api, model, strictMode){
+export default function typecheck(args, api, model, strictMode, typeLoose){
   for(let i=0, len=args.length; i<len; i++){
     let type = api[i].type;
-    if(!check(type, args[i], model, strictMode)){
+    console.log(api[i], 1231);
+    if(!check(type, args[i], model, strictMode, typeLoose)){
       throw new TypeError("Argument type not match! expect "+(type && type.name || type)+" and received "+ args[i] + "["+typeof(args[i])+"]");
     }
   }

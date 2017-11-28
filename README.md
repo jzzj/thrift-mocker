@@ -27,6 +27,8 @@ const thriftMocker = new ThriftMocker({
   boundary: false, // generate data maybe really long, null, empty string, etc.
   cache: true,  // if not cache, will generate different data at each time. Your choice.
   serviceName: "YourSeviceName" // If your thrift service has more than one service, you have to indicate the service you need!
+  treatArgumentsAsObject: true, // You can call your thrift method as Service.someMethod({arg1: value1, arg2: value2}); thrift definition like: string someMethod(1:someType arg1,2:someType arg2);
+  typeLoose: true	    // will not check if your arguments are the exactly same as your thrift type, object type will accpet!
 });
 
 const result = await thriftMocker.exec('Reserved argument!', methodName, ...args);

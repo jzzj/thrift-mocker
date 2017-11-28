@@ -12,7 +12,9 @@ describe('Your tests go here!', function() {
       thriftMocker = new ThriftMocker({
         service: path.resolve(__dirname, './service.thrift'),
         models: [require('./service_types')],
-        strictMode: true
+        strictMode: true,
+        treatArgumentsAsObject: true,
+        typeLoose: true
       });
     });
 
@@ -34,6 +36,23 @@ describe('Your tests go here!', function() {
         assert(e instanceof TypeError, 'not TypeError, error happened');
         done();
       }
+    });
+
+    it('check service.method(...) is ok', function(done) {
+      thriftMocker.testModel({
+        id: 1, 
+        str: '12',
+        model: {
+          id: 2,
+          name: 3
+        }
+      }).then(result => {
+        should(result).be.a.String();
+        done();
+      }).catch(e => {
+        assert(false, 'call method is not ok!');
+        done();
+      });
     });
 
     it('test case 2', function() {

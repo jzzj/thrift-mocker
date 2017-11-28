@@ -25,7 +25,7 @@ export default function(options){
   options.models = Array.isArray(options.models) ? options.models : [options.models];
   const service = options.serviceName ? ast.service[options.serviceName] : ast.service[services[0]];
 
-  return {
+  const mocker = {
     exec(Service, methodName, ...args){
       const method = service[methodName];
       if(!method){
@@ -34,7 +34,7 @@ export default function(options){
       if(args.length !== method.args.length){
         throw new Error("Arguments length not match! expect "+method.args.length+" and received "+args.length+"!");
       }
-      typecheck(args, method.args, options.models, !!options.strictMode);
+      typecheck(args, method.args, options.models, !!options.strictMode, !!options.typeLoose);
       return new Promise((resolve, reject)=>{
         try{
           const data = generate(method.type, ast, {
@@ -57,4 +57,23 @@ export default function(options){
       });
     }
   }
+  for(let key in service) {
+    if(service.hasOwnProperty(key) && key !== 'exec'){
+      mocker[key] = function(...args) {
+        if(options.treatArgumentsAsObject && args[0] instanceof Object) {
+          const argsObject = args[0];
+          const namingArgs = service[key].args;
+          let finalArgs = [];
+          for(let i=0, len=namingArgs.length; i<len; i++){
+            const arg = argsObject[namingArgs[i].name];
+            finalArgs.push(arg);
+          }
+          args = finalArgs;
+        }
+        console.log([null, key].concat(args));
+        return mocker.exec.apply(mocker, [null, key].concat(args));
+      }
+    }
+  }
+  return mocker;
 }
