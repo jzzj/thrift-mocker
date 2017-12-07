@@ -144,6 +144,7 @@ function doGenerate(name, type){
     case "double":
       return generator.doubleGenerator(generateBoundary);
     case "bool":
+    case "boolean":
       return generator.boolGenerator(generateBoundary);
     default:
       return UNMATCHED;

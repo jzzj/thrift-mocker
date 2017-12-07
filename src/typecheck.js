@@ -11,6 +11,7 @@ function check(type, value, model, strictMode, typeLoose){
       case "string":
         return typeof value === 'string';
       case "bool":
+      case "boolean":
         return typeof vlaue === 'boolean';
       default:
         const struct = getStruct(type, model);
